@@ -1,10 +1,10 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { connectDB } from "./db";
-import { createServer } from "./server";
+import { connectDB } from "./config/db";
+import { createServer } from "./api/serverRoutes";
 import { analyzeQueue } from "./services/queue";
-import "./worker"; //we should run worker separately but u asked for one github url .
-import { runSchedulerOnce } from "./scheduler";
+import "./worker/worker"; //we should run worker separately but u asked for one github url .
+import { runSchedulerOnce } from "./scheduler/scheduler";
 
 const PORT = parseInt(process.env.PORT || "3000", 10);
 

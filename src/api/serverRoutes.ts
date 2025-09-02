@@ -2,10 +2,10 @@ import express from "express";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import mongoSanitize from "express-mongo-sanitize";
-import { domainSchema } from "./utils/validation";
-import { RequestLogModel } from "./models/RequestLog";
-import { DomainModel } from "./models/Domain";
-import { analyzeQueue } from "./services/queue";
+import { domainSchema } from "../utils/validation";
+import { RequestLogModel } from "../models/RequestLog";
+import { DomainModel } from "../models/Domain";
+import { analyzeQueue } from "../services/queue";
 
 const router = express.Router();
 

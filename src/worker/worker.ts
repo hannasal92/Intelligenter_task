@@ -1,6 +1,6 @@
-import { analyzeQueue } from "./services/queue";
-import { analyzeDomain } from "./services/analyzer";
-import { DomainModel } from "./models/Domain";
+import { analyzeQueue } from "../services/queue";
+import { analyzeDomain } from "../services/analyzer";
+import { DomainModel } from "../models/Domain";
 import dotenv from "dotenv";
 dotenv.config();
 

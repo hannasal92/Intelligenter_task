@@ -1,5 +1,5 @@
-import { analyzeQueue } from "./services/queue";
-import { DomainModel } from "./models/Domain";
+import { analyzeQueue } from "../services/queue";
+import { DomainModel } from "../models/Domain";
 
 /**
  * Enqueue domains that haven't been updated in >30 days.
