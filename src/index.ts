@@ -5,14 +5,16 @@ import { createServer } from "./api/serverRoutes";
 import { analyzeQueue } from "./services/queue";
 import "./worker/worker"; //we should run worker separately but u asked for one github url .
 import { runSchedulerOnce } from "./scheduler/scheduler";
+import cron from "node-cron";
 
 const PORT = parseInt(process.env.PORT || "3000", 10);
 
 async function main() {
   await connectDB();
 
-  //run scheduler at startup
+cron.schedule("0 0 * * *", async () => {
   await runSchedulerOnce();
+});
 
   //start the server
   const app = createServer();

@@ -11,3 +11,6 @@ export const analyzeQueue = new Bull("analyzeQueue", REDIS_URL, {
     removeOnFail: false,
   }
 });
+
+// also we should add health check to to check if all the resourses are online mongodb , redis third party
+
