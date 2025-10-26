@@ -5,7 +5,8 @@ dotenv.config();
 
 const VT_API_KEY = process.env.VT_API_KEY;
 const WHOIS_API_KEY = process.env.WHOIS_API_KEY;
-
+const WHOIS_URL = process.env.WHOIS_URL;
+const VT_URL = process.env.VT_URL;
 
 axiosRetry(axios, {
   retries: 5, // maximum retry attempts
@@ -40,7 +41,7 @@ async function fetchWhois(domain : string) {
     return {};
   }
   const { data } = await axios.get(
-    "https://www.whoisxmlapi.com/whoisserver/WhoisService",
+    `${WHOIS_URL}`,
     {
       headers: {
         Authorization: `Bearer ${WHOIS_API_KEY}`,
@@ -62,7 +63,7 @@ export async function fetchVirusTotal(domain: string) {
   // }
 
   const { data } = await axios.get(
-    `https://www.virustotal.com/api/v3/domains/${domain}`,
+    `${VT_URL}/${domain}`,
     {
       headers: {
         "x-apikey": VT_API_KEY,

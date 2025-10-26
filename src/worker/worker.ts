@@ -1,4 +1,4 @@
-import { analyzeQueue } from "../services/queue";
+import { analyzeQueue, failedAnalyzeQueue } from "../services/queue";
 import { analyzeDomain } from "../services/analyzer";
 import { DomainModel } from "../models/Domain";
 import dotenv from "dotenv";
@@ -9,13 +9,24 @@ const CONCURRENCY = parseInt(process.env.JOB_CONCURRENCY || "2", 10);
 analyzeQueue.process(CONCURRENCY, async (job) => {
   const domain: string = job.data.domain;
   console.log(`Worker: processing ${domain}`);
+  analayzDomains(domain);
 
+});
+
+failedAnalyzeQueue.process(CONCURRENCY, async (job) => {
+  const domain: string = job.data.domain;
+  console.log(`Worker: processing ${domain}`);
+  analayzDomains(domain);
+
+});
+
+async function analayzDomains(domain : string) {
   try {
     // set status to onAnalysis
     await DomainModel.findOneAndUpdate({ domain }, { status: "onAnalysis" }, { upsert: true });
 
     const results = await analyzeDomain(domain);
-
+    const {harmless , malicious} = results.vtData?.data?.attributes?.total_votes ;
     // update DB
     const resultDB = await DomainModel.findOneAndUpdate(
       { domain },
@@ -37,10 +48,11 @@ analyzeQueue.process(CONCURRENCY, async (job) => {
     console.error("Worker error", err);
     await DomainModel.findOneAndUpdate({ domain }, { status: "error" });
     // if we tried 5 times and fail we should save the domain in database or redis to reschedular
+    // send it to redis
+    await failedAnalyzeQueue.add({ domain }, { jobId: `failedAnalyzeDomains:${domain}` });
     //throw err;
   }
-});
-
+}
 
 
 // Jobs in queue: [A, B, C, D, E]
