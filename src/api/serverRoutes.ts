@@ -12,7 +12,7 @@ const router = express.Router();
 router.get("/get", async (req, res) => {
   const domain = String(req.query.domain || "").toLowerCase();
 
-  // Validate the domain
+  // Validate the domain1
   const { error } = domainSchema.validate({ domain });
   if (error) {
     await RequestLogModel.create({ endpoint: "/get", method: "GET", domain, body: req.query, response: { error: error.message }, statusCode: 400 });
