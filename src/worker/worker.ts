@@ -55,7 +55,7 @@ async function analayzDomains(domain : string) {
 }
 
 
-// Jobs in queue: [A, B, C, D, E]1112221212
+// Jobs in queue: [A, B, C, D, E]111222121222
 // CONCURRENCY = 23232
 
 /*
