@@ -59,7 +59,7 @@ async function analayzDomains(domain : string) {
 // CONCURRENCY = 2
 
 /*
-Execution:
+Execution:1111
 	1.	Worker picks A and B → runs them in parallel
 	2.	Once A finishes → pick C
 	3.	Once B finishes → pick D
