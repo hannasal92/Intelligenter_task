@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 dotenv.config();
 import { connectDB } from "./config/db";
 import { createServer } from "./api/serverRoutes";
-import { analyzeQueue } from "./services/queue";
 import "./worker/worker"; //we should run worker separately but u asked for one github url .
 import { runSchedulerOnce } from "./scheduler/scheduler";
 import cron from "node-cron";
