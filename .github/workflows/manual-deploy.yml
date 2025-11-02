@@ -36,9 +36,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Sanitize branch name
+        id: vars
+        run: echo "TAG_NAME=${GITHUB_REF_NAME//\//-}" >> $GITHUB_ENV
+      
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: hannasalameh/my-intelligenter-app:${{ github.event.inputs.branch }}
+          tags: hannasalameh/my-intelligenter-app:${{ env.TAG_NAME }}
