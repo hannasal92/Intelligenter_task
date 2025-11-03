@@ -35,14 +35,27 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Sanitize branch name
-        id: vars
-        run: echo "TAG_NAME=${GITHUB_REF_NAME//\//-}" >> $GITHUB_ENV
-      
+        
+      - name: Get next version tag
+        id: version
+        run: |
+          IMAGE="hannasal/my-intelligenter-app"
+          # Get the highest existing tag number (like 01, 02, 03)
+          TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${IMAGE}/tags/?page_size=100" | jq -r '.results[].name' | grep -E '^[0-9]+$' | sort -n)
+          if [ -z "$TAGS" ]; then
+            NEXT_TAG="01"
+          else
+            LAST_TAG=$(echo "$TAGS" | tail -n 1)
+            NEXT_TAG=$(printf "%02d" $((10#$LAST_TAG + 1)))
+          fi
+          echo "NEXT_TAG=$NEXT_TAG" >> $GITHUB_ENV
+          echo "Next tag will be: $NEXT_TAG"
+          
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: hannasal/my-intelligenter-app:${{ env.TAG_NAME }}
+          tags: |
+            hannasal/my-intelligenter-app:latest
+            hannasal/my-intelligenter-app:${{ env.NEXT_TAG }}
