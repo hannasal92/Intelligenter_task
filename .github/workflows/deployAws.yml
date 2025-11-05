@@ -24,6 +24,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Update kubeconfig dynamically
+        run: |
+          aws eks update-kubeconfig --name ${{ secrets.CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+
       # Step 5: Deploy Docker image to the cluster
       - name: Update deployment image
         run: |
