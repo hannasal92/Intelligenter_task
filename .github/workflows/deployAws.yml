@@ -1,0 +1,39 @@
+name: Deploy Docker Image to AWS EKS
+
+on:
+  workflow_dispatch:
+    inputs:
+      IMAGE_TAG:
+        description: 'Image tag (e.g., 42)'
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Step 5: Deploy Docker image to the cluster
+      - name: Update deployment image
+        run: |
+          IMAGE_TAG=${{ github.event.inputs.IMAGE_TAG }}
+          IMAGE_NAME="hannasal/my-intelligenter-app:${IMAGE_TAG}"
+          echo "Updating deployment with image $IMAGE_NAME"
+          kubectl set image deployment/app-intell-deployment intell=$IMAGE_NAME
+          kubectl rollout status deployment/app-intell-deployment
+
+      # Step 6: Verify service
+      - name: Get service info
+        run: |
+          kubectl get svc app-intell-service
